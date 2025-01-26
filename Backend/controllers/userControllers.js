@@ -54,6 +54,7 @@ const createUser = async (req, res) => {
     // 5. Hash the password to secure it before storing
     const randomSalt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, randomSalt);
+    // authController.js (or wherever you handle authentication)
 
     // 6. Create a new user with the provided data
     const newUser = new userModel({
@@ -109,8 +110,6 @@ const loginUser = async (req, res) => {
         success: false,
         message: "User does not exist!!!",
       });
-      
-
     }
 
     // 5. Compare the provided password with the stored hashed password

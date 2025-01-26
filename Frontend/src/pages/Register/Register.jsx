@@ -75,12 +75,12 @@ const Register = () => {
       isValid = false;
     }
 
-    if(password.length < 6){
+    if (password.length < 6) {
       setPasswordError("Password must be atleast 6 characters");
       isValid = false;
     }
 
-    if(phone.length < 10){
+    if (phone.length < 10) {
       setPhoneError("Invalid Phone Number");
       isValid = false;
     }
@@ -94,6 +94,30 @@ const Register = () => {
     }
     return isValid;
   };
+  
+  const validatePassword = (password) => {
+    const minLength = 8; // Minimum password length
+    const maxLength = 20; // Maximum password length
+
+    // Regex pattern to enforce complexity rules (lowercase, uppercase, digit, special character)
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~])[A-Za-z\d!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~]{8,20}$/;
+
+    if (password.length < minLength || password.length > maxLength) {
+      toast.error(
+        `Password must be between ${minLength} and ${maxLength} characters long.`
+      );
+      return false;
+    }
+
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+      );
+      return false;
+    }
+    return true;
+  };
   //submit button function
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -102,8 +126,12 @@ const Register = () => {
     if (!isValidated) {
       return;
     }
-    // Sending request to the api
 
+    //validate password
+    if (!validatePassword(password)) {
+      return;
+    }
+    
     // Making JSON object
     const data = {
       fullname: fullname,

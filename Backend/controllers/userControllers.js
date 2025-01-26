@@ -144,7 +144,6 @@ const loginUser = async (req, res) => {
   }
 };
 
-// Function to update user details
 const updateUserDetails = async (req, res) => {
   console.log(req.body);
 
@@ -174,6 +173,15 @@ const updateUserDetails = async (req, res) => {
       });
     }
 
+    // Find the user by userId
+    const user = await userModel.findById(userId);
+    if (!user) {
+      return res.status(400).json({
+        success: false,
+        message: "User does not exist!!!",
+      });
+    }
+
     // Check if the password is at least 6 characters long
     if (password.length < 6) {
       return res.status(400).json({
@@ -182,23 +190,46 @@ const updateUserDetails = async (req, res) => {
       });
     }
 
+    // **Password Reuse Check**
+    const isPasswordReused = user.passwordHistory.some((hashedPassword) => {
+      return bcrypt.compareSync(password, hashedPassword);
+    });
+
+    if (isPasswordReused) {
+      return res.status(400).json({
+        success: false,
+        message: "You cannot reuse a recent password!",
+      });
+    }
+
+    // **Password Expiry Check**
+    const expiryPeriod = 90; // Password expiry in days
+    const passwordAgeInDays =
+      (Date.now() - new Date(user.passwordUpdatedAt)) / (1000 * 60 * 60 * 24);
+
+    if (passwordAgeInDays > expiryPeriod) {
+      return res.status().json({
+        success: false,
+        message: "Your password has expired. Please change it.",
+      });
+    }
+
     // Hash the new password before storing it
     const randomSalt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, randomSalt);
 
-    // Update the user's details in the database
-    const user = await userModel.findByIdAndUpdate(userId, {
-      fullname: fullname,
-      username: username,
-      password: hashedPassword,
-    });
-
-    if (!user) {
-      return res.status(400).json({
-        success: false,
-        message: "User does not exist!!!",
-      });
+    // **Update Password History** (limit to 5 passwords)
+    if (user.passwordHistory.length >= 5) {
+      user.passwordHistory.shift(); // Remove the oldest password
     }
+
+    user.passwordHistory.push(hashedPassword); // Add new password to history
+
+    // Update the user's details in the database, including password history and last updated timestamp
+    user.fullname = fullname;
+    user.username = username;
+    user.password = hashedPassword;
+    user.passwordUpdatedAt = Date.now();
 
     // Save the updated user
     await user.save();

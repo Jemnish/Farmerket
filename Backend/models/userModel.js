@@ -33,7 +33,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
-
+  passwordHistory: {
+    type: [String],
+    default: [],
+  },
   resetPasswordOTP: {
     type: Number,
     default: null,

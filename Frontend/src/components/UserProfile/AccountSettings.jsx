@@ -64,13 +64,34 @@ const AccountSettings = () => {
     setPassword(e.target.value);
   };
 
+  const validatePassword = (password) => {
+    const minLength = 8; // Minimum password length
+    const maxLength = 20; // Maximum password length
+
+    // Regex pattern to enforce complexity rules (lowercase, uppercase, digit, special character)
+    const passwordRegex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~])[A-Za-z\d!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~]{8,20}$/;
+
+    if (password.length < minLength || password.length > maxLength) {
+      toast.error(
+        `Password must be between ${minLength} and ${maxLength} characters long.`
+      );
+      return false;
+    }
+
+    if (!passwordRegex.test(password)) {
+      toast.error(
+        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
+      );
+      return false;
+    }
+    return true;
+  };
+
   //validation
   var validate = () => {
     var isValid = true;
     if (fullname.trim() === "") {
-      isValid = false;
-    }
-    if (phone.trim() === "") {
       isValid = false;
     }
     if (username.trim() === "") {
@@ -89,32 +110,46 @@ const AccountSettings = () => {
     //validate
     var isValidated = validate();
 
-    console.log(fullname, phone, username, password);
     if (!isValidated) {
       toast.error("Please fill all the fields");
       return;
     }
     // Sending request to the api
 
+    if (!validatePassword(password)) {
+      return;
+    }
+
     // Making JSON object
     const data = {
       userId: userId._id,
       fullname: fullname,
-      phone: phone,
+      phone: currentUser.phone,
       username: username,
       password: password,
     };
 
-    console.log(data);
-
-    updateUserApi(data).then((res) => {
-      // Received data : sucess mesaage
-      if (res.data.success === false) {
-        toast.error(res.data.message);
-      } else {
-        toast.success(res.data.message);
-      }
-    });
+    updateUserApi(data)
+      .then((res) => {
+        if (res.data.success === false) {
+          toast.error(res.data.message);
+        } else {
+          toast.success(res.data.message);
+        }
+      })
+      .catch((error) => {
+        // Handle network errors or server-side errors
+        if (error.response) {
+          // The server responded with a status code outside 2xx
+          toast.error(error.response.data.message || "An error occurred");
+        } else if (error.request) {
+          // The request was made but no response was received
+          toast.error("Network error, please try again.");
+        } else {
+          // Something went wrong while setting up the request
+          toast.error("An error occurred: " + error.message);
+        }
+      });
   };
   return (
     <div className="account__settings">
@@ -140,8 +175,8 @@ const AccountSettings = () => {
               type="text"
               className="form-control"
               placeholder={currentUser.phone}
-              value={currentUser.phone} 
-              disabled 
+              value={currentUser.phone}
+              disabled
             />
           </FormGroup>
 

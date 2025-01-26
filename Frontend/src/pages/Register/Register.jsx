@@ -4,7 +4,6 @@ import { Link } from "react-router-dom";
 import "../../styles/Register.css";
 import { toast } from "react-toastify";
 import { registerUserApi } from "../../api/Api";
-
 import registerImg from "../../assets/images/register_cover.jpeg";
 import userIcon from "../../assets/images/user.png";
 

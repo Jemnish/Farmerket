@@ -6,6 +6,7 @@ import { toast } from "react-toastify";
 import { registerUserApi } from "../../api/Api";
 import registerImg from "../../assets/images/register_cover.jpeg";
 import userIcon from "../../assets/images/user.png";
+import ReCapthca from "react-google-recaptcha";
 
 const Register = () => {
   //make a usestate for 5 fields
@@ -15,6 +16,7 @@ const Register = () => {
   const [usertype, setUserType] = useState("");
   const [password, setPassword] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
+  const [capValue, setCapValue] = useState(null);
 
   //use state for error message
   const [fullnameError, setFullnameError] = useState("");
@@ -93,7 +95,7 @@ const Register = () => {
     }
     return isValid;
   };
-  
+
   const validatePassword = (password) => {
     const minLength = 8; // Minimum password length
     const maxLength = 20; // Maximum password length
@@ -130,7 +132,7 @@ const Register = () => {
     if (!validatePassword(password)) {
       return;
     }
-    
+
     // Making JSON object
     const data = {
       fullname: fullname,
@@ -231,8 +233,13 @@ const Register = () => {
                       <p className="text__danger">{confirmpasswordError}</p>
                     )}
                   </FormGroup>
+                  <ReCapthca
+                    sitekey="6LeaDMQqAAAAADPApk-XzX4KUUeZRv8lAchrlY38"
+                    onChange={(val) => setCapValue(val)}
+                  />
 
                   <Button
+                    disabled={!capValue}
                     className="btn secondary__btn auth__btn "
                     type="submit"
                     onClick={handleSubmit}

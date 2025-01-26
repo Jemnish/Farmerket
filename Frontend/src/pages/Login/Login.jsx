@@ -1,11 +1,10 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-
+import ReCapthca from "react-google-recaptcha";
 import { Container, Row, Col, Form, FormGroup, Button } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/Login.css";
 import { loginUserApi } from "../../api/Api";
-
 import loginImg from "../../assets/images/login_cover.jpg";
 import userIcon from "../../assets/images/user.png";
 
@@ -14,6 +13,7 @@ const Login = () => {
   // Making a use sate
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [capValue, setCapValue] = useState(null);
 
   // Making an error state
   const [usernameError, setUsernameError] = useState("");
@@ -122,8 +122,13 @@ const Login = () => {
                       <p className="text__danger">{passwordError}</p>
                     )}
                   </FormGroup>
+                  <ReCapthca
+                    sitekey="6LeaDMQqAAAAADPApk-XzX4KUUeZRv8lAchrlY38"
+                    onChange={(val) => setCapValue(val)}
+                  />
 
                   <Button
+                    disabled={!capValue}
                     className="btn secondary__btn auth__btn "
                     type="submit"
                     onClick={handleSubmit}

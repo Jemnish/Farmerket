@@ -1,0 +1,97 @@
+/* Account Details Container */
+.account-details-container {
+    padding: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.4);
+    margin-top: 20px;
+  }
+
+  .account-details-container h3{
+    background-color: #343a40;
+    color: #fff !important;
+    padding: 1rem;
+    border-radius: 8px;
+  }
+  
+  /* Account Card */
+  .account-card {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+  }
+  
+  .account-card h5 {
+    margin-bottom: 15px;
+    color: #343a40;
+    font-weight: bold;
+  }
+  
+  /* Account Info */
+  .account-info .form-label {
+    color: #555;
+    font-weight: bold;
+  }
+  
+  .form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #80bdff;
+    outline: 0;
+  }
+.account__labels{
+    display: flex !important;
+    flex-direction: row;
+    justify-content: start;
+    align-items: center;
+  }
+.account__labels label{
+  margin-right: 1rem;
+}
+
+.account__labels input{
+  width: 50%;
+  padding: 5px !important;
+
+}
+
+.admin__account_btns{
+  display: flex ;
+  flex-direction: row ;
+  justify-content: space-between ;
+  margin-top: 1rem;
+  padding-left: 3rem;
+  padding-right:3rem ;
+}
+.btn__success{
+  background-color: #009445;
+  color: #fff;
+
+}
+  
+
+.btn__failure{
+  background-color: #ff0303;
+  color: #fff;
+  
+}
+  
+  
+  /* Responsive Adjustments */
+  @media (max-width: 768px) {
+    .account-details-container {
+      padding: 15px;
+    }
+  
+    .account-card {
+      padding: 15px;
+    }
+  }
+  

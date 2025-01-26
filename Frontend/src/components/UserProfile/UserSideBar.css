@@ -1,0 +1,38 @@
+.user__sidebar{
+    padding-top: 20px;
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding-bottom: 10px;
+
+}
+
+.user__sidebar .sidebar__one, .user__sidebar .sidebar__two{
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 20px;
+    color: var(--text-color);
+}
+
+.user__sidebar i{
+    font-size: 30px;
+    color: black;
+}
+
+
+.user__sidebar .sidebar__one:hover{
+    background-color: rgb(224, 224, 224);
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+
+.user__sidebar .sidebar__one{
+    background-color: rgb(224, 224, 224);
+    border-radius: 5px;
+    cursor: pointer;
+
+}

@@ -1,0 +1,124 @@
+/* Admin Dashboard Content */
+.dashboard-content {
+
+    background-color: #f4f5f7;
+    min-height: 100vh;
+  }
+  
+  /* Header */
+  .dashboard-content h3 {
+    color: #333;
+    font-weight: bold;
+  }
+  
+  /* Buttons */
+  .btn-primary, .btn-danger {
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-primary {
+    background-color: #218838;
+    border: none;
+  }
+  
+  .btn-primary:hover {
+    background-color: #4dab61;
+  }
+  
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  
+  .btn-success {
+    background-color: #28a745;
+    border: none;
+  }
+  
+  .btn-success:hover {
+    background-color: #218838;
+  }
+  
+  /* Modal Styling */
+  .modal-content {
+    border-radius: 8px;
+  }
+  
+  .modal-header {
+    background-color: #218838;
+    color: #fff;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+  }
+  
+  .modal-footer {
+    border-top: 1px solid #dee2e6;
+  }
+  
+  /* Form Inputs */
+  .form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #acf3bb;
+    outline: 0;
+  }
+  
+  /* Image Preview */
+  .img-thumbnail {
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Table Styling */
+  .table {
+    margin-top: 20px;
+    background-color: #fff;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  
+  .table th, .table td {
+    vertical-align: middle;
+    text-align: center;
+  }
+  
+  .table th {
+    background-color: #343a40;
+    color: #fff;
+  }
+  
+  .table-striped tbody tr:nth-of-type(odd) {
+    background-color: #f8f9fa;
+  }
+  
+
+  @media (max-width: 768px) {
+  
+    .btn {
+      width: 100%;
+      margin-bottom: 10px;
+    }
+  
+    .modal-dialog {
+      margin: 10px;
+    }
+  
+    .table th, .table td {
+      font-size: 12px;
+      padding: 8px;
+    }
+  }
+  
+
+  

@@ -1,0 +1,95 @@
+/* Admin Dashboard Content */
+.dashboard-content {
+    background-color: #f4f5f7;
+    min-height: 100vh;
+    padding: 20px;
+  }
+  
+  /* Header */
+  .dashboard-content h2 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 20px;
+  }
+  
+  /* Form Styling */
+  form {
+    max-width: 600px;
+    margin-bottom: 30px;
+  }
+  
+  label {
+    color: #555;
+    font-weight: 600;
+  }
+  
+  .form-control {
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+    padding: 10px;
+    transition: border-color 0.3s ease;
+  }
+  
+  .form-control:focus {
+    border-color: #acf3bb;
+    outline: none;
+  }
+  
+  textarea.form-control {
+    resize: vertical;
+  }
+  
+  /* Buttons */
+  .btn-danger {
+    background-color: #dc3545;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 20px;
+    transition: background-color 0.3s ease;
+  }
+  
+  .btn-danger:hover {
+    background-color: #c82333;
+  }
+  
+  /* Image Preview Section */
+  .image.section {
+    text-align: center;
+  }
+  
+  .image h6 {
+    color: #333;
+    font-weight: bold;
+    margin-bottom: 10px;
+  }
+  
+  .img-fluid.rounded-4.object-fit-cover {
+    border-radius: 8px;
+    object-fit: cover;
+  }
+  
+  /* Responsive Design */
+  @media (max-width: 768px) {
+    .dashboard-content h2 {
+      font-size: 20px;
+    }
+  
+    .form-control {
+      font-size: 14px;
+    }
+  
+    .btn {
+      width: 100%;
+      margin-top: 10px;
+    }
+  
+    .image h6 {
+      font-size: 14px;
+    }
+  
+    .img-fluid.rounded-4.object-fit-cover {
+      width: 100%;
+      height: auto;
+    }
+  }
+  

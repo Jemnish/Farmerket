@@ -1,0 +1,81 @@
+.admin__col {
+    border-right: 1px solid #d1d5db;
+    background-color: #ffffff;
+  }
+
+  .admin__order-h2{
+    margin-left: 2rem;
+    margin-top: 1rem;
+    font-weight: 700;
+    color: var(--primary-color);
+  }
+  
+  .admin__orders-container {
+    display: flex;
+    flex-direction: column;
+    max-height: 100vh;
+    overflow-y: scroll; /* Use 'scroll' to always show the scrollbar, even when not needed */
+    padding: 20px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    margin: 20px;
+    scrollbar-width: thin; /* For Firefox */
+    scrollbar-color: transparent transparent; /* For Firefox */
+  }
+  
+  /* Hide scrollbars for WebKit browsers */
+  .admin__orders-container::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
+  
+  .admin__orders-container::-webkit-scrollbar-thumb {
+    background: transparent;
+  }
+  
+  .admin__order__card {
+    width: 100%;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    margin-bottom: 20px;
+    padding: 15px;
+    background-color: #f0f4f3;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .admin__order__card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+  }
+  
+  .admin__order__card .card-title {
+    color: #2d6a4f;
+  }
+  
+  .admin__order__card .card-text {
+    margin-top: 10px;
+  }
+  
+  .admin__order__card .card-text strong {
+    color: #2d6a4f;
+  }
+  
+  @media (max-width: 768px) {
+    .admin_dashboard-content {
+      flex-direction: column;
+    }
+  
+    .admin__col {
+      border-right: none;
+      border-bottom: 1px solid #d1d5db;
+    }
+  
+    .admin__orders-container {
+      margin: 20px 0;
+      padding: 10px;
+    }
+  
+    .admin__order__card {
+      padding: 10px;
+    }
+  }
+  

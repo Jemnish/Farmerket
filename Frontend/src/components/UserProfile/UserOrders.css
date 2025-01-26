@@ -1,0 +1,42 @@
+/* UserOrders.css */
+.user-orders {
+    padding: 20px;
+  }
+  
+  .orders-list {
+    max-height: 245px; 
+    overflow-y: auto;
+  }
+  
+  .order-item {
+    border: 1px solid #ddd;
+    margin-bottom: 10px;
+    padding: 10px;
+    border-radius: 5px;
+  }
+  
+  .cart-items {
+    margin-top: 10px;
+  }
+  
+  .cart-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+  }
+  
+  .cart-item img {
+    width: 50px; 
+    height: 50px;
+    object-fit: cover;
+    margin-right: 10px;
+  }
+  
+  .cart-item-details {
+    flex-grow: 1;
+  }
+  
+  .cart-item-details h5 {
+    margin: 0;
+  }
+  

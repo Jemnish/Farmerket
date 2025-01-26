@@ -1,0 +1,60 @@
+.account__settings{
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+}
+
+.account__settings h1{
+    font-size: 2rem;
+    color: rgb(6, 96, 23);
+}
+
+.row__group label{
+    color: var(--text-color);
+    
+}
+
+
+.right__bar{
+    background: linear-gradient(to bottom, #c9f5da, #8bcda9) !important;
+}
+
+
+.account__settings_btn{
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+    padding-bottom: 20px;
+
+}
+
+
+.account__settings_btn button{
+    width:  40% !important;
+}
+.update__profile-form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+
+}
+.update__profile-form input{
+    width: 100%;
+    margin-top: .5rem;
+}
+
+.update__profile-form label{
+    display: flex;
+    justify-content: end;
+    align-items: center;
+    width: 50%;
+    margin-top: .5rem;
+    margin-right: .5rem;
+    
+}
+
+

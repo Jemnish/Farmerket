@@ -82,15 +82,15 @@ const createUser = async (req, res) => {
   }
 };
 
+const MAX_FAILED_ATTEMPTS = 5; // Maximum allowed failed attempts
+const BLOCK_DURATION_MINUTES = 15; // Block duration in minutes
+
 // Function to log in a user
 const loginUser = async (req, res) => {
-  // 1. Log the incoming data from the request
   console.log(req.body);
 
-  // 2. Extract the necessary data from the request body
   const { username, password } = req.body;
 
-  // 3. Validate the extracted data (ensure no field is empty)
   if (!username || !password) {
     return res.status(400).json({
       success: false,
@@ -99,36 +99,62 @@ const loginUser = async (req, res) => {
   }
 
   try {
-    // 4. Check if a user with the provided username exists
+    // Find the user by username
     const user = await userModel.findOne({ username: username });
     if (!user) {
-      // return res.status(400).json({
-      //   success: false,
-      //   message: "User does not exist!!!",
-      // });
       return res.json({
         success: false,
         message: "User does not exist!!!",
       });
     }
 
-    // 5. Compare the provided password with the stored hashed password
-    const isValidPassword = await bcrypt.compare(password, user.password);
-    if (!isValidPassword) {
+    // Check if the user is blocked
+    if (user.blockedUntil && user.blockedUntil > Date.now()) {
+      const remainingTime = Math.ceil((user.blockedUntil - Date.now()) / 60000); // Convert to minutes
       return res.json({
         success: false,
-        message: "Incorrect Password!!!",
+        message: `Account temporarily blocked. Try again in ${remainingTime} minutes.`,
       });
-      // return res.status(400).json({
-      //   success: false,
-      //   message: "Incorrect Password!!!",
-      // });
     }
 
-    // 6. Generate a JWT token for the user
+    // Validate the password
+    const isValidPassword = await bcrypt.compare(password, user.password);
+    if (!isValidPassword) {
+      // Increment failed attempts
+      user.failedLoginAttempts += 1;
+
+      // Block the user if they exceed the maximum allowed attempts
+      if (user.failedLoginAttempts >= MAX_FAILED_ATTEMPTS) {
+        user.blockedUntil = new Date(
+          Date.now() + BLOCK_DURATION_MINUTES * 60000
+        ); // Set block expiry time
+        await user.save();
+        return res.json({
+          success: false,
+          message: `Too many failed attempts. Account blocked for ${BLOCK_DURATION_MINUTES} minutes.`,
+        });
+      }
+
+      // Save the updated failed attempts count
+      await user.save();
+
+      return res.json({
+        success: false,
+        message: `Incorrect Password! You have ${
+          MAX_FAILED_ATTEMPTS - user.failedLoginAttempts
+        } attempts remaining.`,
+      });
+    }
+
+    // Reset failed attempts and blockedUntil on successful login
+    user.failedLoginAttempts = 0;
+    user.blockedUntil = null;
+    await user.save();
+
+    // Generate JWT token
     const token = await jwt.sign({ id: user._id }, process.env.JWT_SECRET);
 
-    // 7. Send a success response with the token and user data
+    // Send success response
     res.status(200).json({
       success: true,
       message: "User logged in successfully",

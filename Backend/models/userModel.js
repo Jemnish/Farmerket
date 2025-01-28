@@ -45,6 +45,8 @@ const userSchema = new mongoose.Schema({
     type: Date,
     default: null,
   },
+  failedLoginAttempts: { type: Number, default: 0 },
+  blockedUntil: { type: Date, default: null },
 });
 
 // Create a collection in mongodb with the name users

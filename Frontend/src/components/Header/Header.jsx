@@ -7,7 +7,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 
 const nav_links = [
-  { path: "/", display: "Home" },
+  { path: "/home", display: "Home" },
   { path: "/about", display: "About" },
   { path: "/marketplace", display: "Marketplace" },
   { path: "/contact", display: "Contact" },

@@ -125,6 +125,7 @@ const Login = () => {
                   <ReCapthca
                     sitekey="6LeaDMQqAAAAADPApk-XzX4KUUeZRv8lAchrlY38"
                     onChange={(val) => setCapValue(val)}
+                    className="mb-3"
                   />
 
                   <Button

@@ -68,7 +68,7 @@ const Login = () => {
         if (user.isAdmin) {
           navigate("/admin/dashboard");
         } else {
-          navigate("/home");
+          navigate("/");
         }
       }
     } catch (error) {

@@ -15,6 +15,7 @@ const Register = () => {
   const [username, setUsername] = useState("");
   const [usertype, setUserType] = useState("");
   const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
   const [confirmpassword, setConfirmPassword] = useState("");
   const [capValue, setCapValue] = useState(null);
 
@@ -22,6 +23,7 @@ const Register = () => {
   const [fullnameError, setFullnameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [usernameError, setUsernameError] = useState("");
+  const [emailError, setEmailError] = useState("");
   const [userTypeError, setUserTypeError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [confirmpasswordError, setConfirmPasswordError] = useState("");
@@ -31,6 +33,11 @@ const Register = () => {
     setFullname(e.target.value);
     setFullnameError("");
   };
+  const handleEmail = (e) => {
+    setEmail(e.target.value);
+    setEmailError("");
+  };
+
   const handlePhone = (e) => {
     setPhone(e.target.value);
     setPhoneError("");
@@ -57,6 +64,10 @@ const Register = () => {
     var isValid = true;
     if (fullname.trim() === "") {
       setFullnameError("Full Name is required");
+      isValid = false;
+    }
+    if (email.trim() === "") {
+      setEmailError("Email is required");
       isValid = false;
     }
     if (phone.trim() === "") {
@@ -137,6 +148,7 @@ const Register = () => {
     const data = {
       fullname: fullname,
       phone: phone,
+      email: email,
       usertype: usertype,
       username: username,
       password: password,
@@ -189,6 +201,15 @@ const Register = () => {
                       placeholder="Phone"
                     />
                     {phoneError && <p className="text__danger">{phoneError}</p>}
+                  </FormGroup>
+                  <FormGroup>
+                    <input
+                      onChange={handleEmail}
+                      type="text"
+                      className="form-control"
+                      placeholder="Email"
+                    />
+                    {emailError && <p className="text__danger">{emailError}</p>}
                   </FormGroup>
                   <FormGroup>
                     <input

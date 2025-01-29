@@ -21,6 +21,11 @@ const userSchema = new mongoose.Schema({
     min: 6,
     required: true,
   },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   orders: {
     type: Array,
     default: [],

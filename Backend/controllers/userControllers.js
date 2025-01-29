@@ -11,10 +11,10 @@ const createUser = async (req, res) => {
   console.log(req.body);
 
   // 2. Extract the necessary data from the request body
-  const { fullname, phone, usertype, username, password } = req.body;
+  const { fullname, phone, usertype, username, password, email } = req.body;
 
   // 3. Validate the extracted data (ensure no field is empty)
-  if (!phone || !fullname || !username || !password || !usertype) {
+  if (!phone || !fullname || !username || !password || !usertype || !email) { 
     return res.status(400).json({
       success: false,
       message: "Please enter all the fields!!",
@@ -62,6 +62,7 @@ const createUser = async (req, res) => {
       phone: phone,
       username: username,
       password: hashedPassword,
+      email: email,
       isAdmin: isAdmin,
     });
 

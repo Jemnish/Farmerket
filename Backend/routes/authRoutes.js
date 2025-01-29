@@ -5,8 +5,6 @@ const router = express.Router();
 // Route to generate OTP
 router.post("/generate_otp", generateOTP);
 
-// Route to send OTP
-
 // Route to verify OTP
 router.post("/verify_otp", verifyOTP);
 

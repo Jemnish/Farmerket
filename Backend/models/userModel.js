@@ -34,6 +34,10 @@ const userSchema = new mongoose.Schema({
     type: Array,
     default: [],
   },
+  emailOTP:{
+    type: Number,
+    default: null,
+  },
   isAdmin: {
     type: Boolean,
     default: false,

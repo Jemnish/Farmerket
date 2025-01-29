@@ -4,14 +4,11 @@ const sendEmailOTP = require("../services/emailConfig");
 const userModel = require("../models/userModel");
 require("dotenv").config();
 
-let otpStore = {};
-
-
+// Generate OTP and store in user model
 const generateOTP = async (req, res) => {
-  
   try {
     const { username } = req.body;
-    console.log(username);
+    console.log(`🔹 Received OTP request for: ${username}`);
 
     const user = await userModel.findOne({ username });
     if (!user) {
@@ -19,24 +16,23 @@ const generateOTP = async (req, res) => {
         .status(400)
         .json({ success: false, message: "User not found." });
     }
+
     const email = user.email;
+    console.log(`🔹 User email: ${email}`);
 
-    const otp = speakeasy.totp({
-      secret: process.env.JWT_SECRET,
-      encoding: "base32",
-    });
+    // Generate a 6-digit OTP
+    const otp = Math.floor(100000 + Math.random() * 900000);
 
-    otpStore[email] = {
-      otp,
-      expiresAt: Date.now() + 10 * 60 * 1000,
-    };
+    // Update user model with OTP
+    user.emailOTP = otp;
+    await user.save();
 
-    // Pass `res` to sendOTP
+    // Send OTP via email
     await sendEmailOTP(email, otp, res);
 
     res.json({ success: true, message: "OTP sent to your email." });
   } catch (error) {
-    console.error("Error in generateOTP:", error);
+    console.error("❌ Error in generateOTP:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error. Please try again.",
@@ -48,45 +44,43 @@ const generateOTP = async (req, res) => {
 const verifyOTP = async (req, res) => {
   try {
     const { username, otp } = req.body;
+    console.log(`🔹 Verifying OTP for: ${username}`);
+    console.log(`🔹 Entered OTP: ${otp}`);
 
-    // Find email by searching username
     const user = await userModel.findOne({ username });
     if (!user) {
-      return res
-        .status(400)
-        .json({ success: false, message: "User not found." });
-    }
-    const email = user.email;
-
-    if (!otpStore[email]) {
-      return res
-        .status(400)
-        .json({ success: false, message: "No OTP found. Request a new one." });
+      console.log("❌ User not found!");
+      return res.status(400).json({ success: false, message: "User not found." });
     }
 
-    // Check OTP expiration
-    if (Date.now() > otpStore[email].expiresAt) {
-      delete otpStore[email]; // Clear expired OTP
-      return res
-        .status(400)
-        .json({ success: false, message: "OTP expired. Request a new one." });
-    }
+    console.log(`🔹 Stored OTP in DB: ${user.emailOTP}`);
 
-    // Verify OTP
-    if (otpStore[email].otp === otp) {
-      delete otpStore[email]; // Clear OTP after successful login
+    // Check if OTP matches
+    if (user.emailOTP && user.emailOTP.toString() === otp.toString()) {
+      console.log("✅ OTP verified successfully!");
+
+      // Clear OTP after successful verification
+      user.emailOTP = null;
+      await user.save();
 
       // Generate JWT token
-      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
         expiresIn: "1h",
       });
-
-      res.json({ success: true, message: "OTP verified!", token });
+      const userToken = await jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+      res.status(200).json({
+        success: true,
+        message: "OTP verified successfully!",
+        token: userToken,
+        userData: user,
+      });
+      
     } else {
-      res.status(400).json({ success: false, message: "Invalid OTP." });
+      console.log("❌ Invalid OTP!");
+      return res.status(400).json({ success: false, message: "Invalid OTP." });
     }
   } catch (error) {
-    console.error("Error in verifyOTP:", error);
+    console.error("❌ Error in verifyOTP:", error);
     res.status(500).json({
       success: false,
       message: "Internal server error. Please try again.",

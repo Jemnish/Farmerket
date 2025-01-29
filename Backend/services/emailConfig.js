@@ -1,28 +1,41 @@
+const userModel = require("../models/userModel");
 const nodemailer = require("nodemailer");
-require("dotenv").config();
+const dotenv = require("dotenv");
+dotenv.config();
+
+console.log("Email User:", process.env.EMAIL_USER); // Debugging
+console.log("Email Pass:", process.env.EMAIL_PASS); // Debugging
 
 const transporter = nodemailer.createTransport({
-  service: process.env.EMAIL_SERVICE,
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
 });
 
-const sendOTP = async (email, otp) => {
+// The sendOTP function to send OTP to a user's email
+const sendEmailOTP = async (email, otp, res) => {
+  const user = await userModel.findOne({ email });
+  if (!user) {
+    return res.status(400).json({ success: false, message: "User not found." });
+  }
   const mailOptions = {
     from: process.env.EMAIL_USER,
-    to: email,
-    subject: "Your One-Time Password (OTP)",
-    text: `Your OTP is: ${otp}. It is valid for 10 minutes.`,
+    to: user.email,
+    subject: "Your OTP for Login",
+    text: `Your OTP is: ${otp}`,
   };
 
   try {
     await transporter.sendMail(mailOptions);
-    console.log(`OTP sent to ${email}`);
+    console.log("OTP sent successfully to", email);
   } catch (error) {
-    console.error("Error sending email:", error);
+    console.error("Failed to send OTP:", error);
+    return res
+      .status(500)
+      .json({ success: false, message: "Failed to send OTP" });
   }
 };
 
-module.exports = sendOTP;
+module.exports = sendEmailOTP;

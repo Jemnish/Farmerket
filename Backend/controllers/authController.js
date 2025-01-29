@@ -1,55 +1,97 @@
 const speakeasy = require("speakeasy");
 const jwt = require("jsonwebtoken");
-const sendOTP = require("../config/emailConfig");
+const sendEmailOTP = require("../services/emailConfig");
+const userModel = require("../models/userModel");
 require("dotenv").config();
 
-let otpStore = {}; // Temporary storage for OTPs
+let otpStore = {};
 
-// Generate and send OTP via email
-exports.generateOTP = async (req, res) => {
-  const { email } = req.body;
 
-  // Generate OTP
-  const otp = speakeasy.totp({
-    secret: process.env.JWT_SECRET,
-    encoding: "base32",
-  });
+const generateOTP = async (req, res) => {
+  
+  try {
+    const { username } = req.body;
+    console.log(username);
 
-  // Store OTP (valid for 10 minutes)
-  otpStore[email] = {
-    otp,
-    expiresAt: Date.now() + 10 * 60 * 1000,
-  };
+    const user = await userModel.findOne({ username });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found." });
+    }
+    const email = user.email;
 
-  // Send OTP via email
-  await sendOTP(email, otp);
+    const otp = speakeasy.totp({
+      secret: process.env.JWT_SECRET,
+      encoding: "base32",
+    });
 
-  res.json({ success: true, message: "OTP sent to your email." });
+    otpStore[email] = {
+      otp,
+      expiresAt: Date.now() + 10 * 60 * 1000,
+    };
+
+    // Pass `res` to sendOTP
+    await sendEmailOTP(email, otp, res);
+
+    res.json({ success: true, message: "OTP sent to your email." });
+  } catch (error) {
+    console.error("Error in generateOTP:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again.",
+    });
+  }
 };
 
 // Verify OTP
-exports.verifyOTP = async (req, res) => {
-  const { email, otp } = req.body;
+const verifyOTP = async (req, res) => {
+  try {
+    const { username, otp } = req.body;
 
-  if (!otpStore[email]) {
-    return res.status(400).json({ success: false, message: "No OTP found. Request a new one." });
-  }
+    // Find email by searching username
+    const user = await userModel.findOne({ username });
+    if (!user) {
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found." });
+    }
+    const email = user.email;
 
-  // Check OTP expiration
-  if (Date.now() > otpStore[email].expiresAt) {
-    delete otpStore[email]; // Clear expired OTP
-    return res.status(400).json({ success: false, message: "OTP expired. Request a new one." });
-  }
+    if (!otpStore[email]) {
+      return res
+        .status(400)
+        .json({ success: false, message: "No OTP found. Request a new one." });
+    }
 
-  // Verify OTP
-  if (otpStore[email].otp === otp) {
-    delete otpStore[email]; // Clear OTP after successful login
+    // Check OTP expiration
+    if (Date.now() > otpStore[email].expiresAt) {
+      delete otpStore[email]; // Clear expired OTP
+      return res
+        .status(400)
+        .json({ success: false, message: "OTP expired. Request a new one." });
+    }
 
-    // Generate JWT token
-    const token = jwt.sign({ email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    // Verify OTP
+    if (otpStore[email].otp === otp) {
+      delete otpStore[email]; // Clear OTP after successful login
 
-    res.json({ success: true, message: "OTP verified!", token });
-  } else {
-    res.status(400).json({ success: false, message: "Invalid OTP." });
+      // Generate JWT token
+      const token = jwt.sign({ email }, process.env.JWT_SECRET, {
+        expiresIn: "1h",
+      });
+
+      res.json({ success: true, message: "OTP verified!", token });
+    } else {
+      res.status(400).json({ success: false, message: "Invalid OTP." });
+    }
+  } catch (error) {
+    console.error("Error in verifyOTP:", error);
+    res.status(500).json({
+      success: false,
+      message: "Internal server error. Please try again.",
+    });
   }
 };
+
+module.exports = { generateOTP, verifyOTP };

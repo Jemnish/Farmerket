@@ -48,6 +48,7 @@ app.use("/api/auth", require("./routes/authRoutes"));
 // Using the port value specified in the .env file
 const PORT = process.env.PORT || 5000;
 
+
 // Starting the server and listening on the specified port
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}!!!`); // Log message when server starts

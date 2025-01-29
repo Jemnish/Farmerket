@@ -41,6 +41,8 @@ app.use(globalRateLimiter);
 app.use("/api/user", require("./routes/userRoutes")); // User-related routes
 app.use("/api/product", require("./routes/productRoutes")); // Product-related routes
 app.use("/api/cart", require("./routes/cartRoutes")); // Cart-related routes
+app.use("/api/auth", require("./routes/authRoutes"));
+
 
 // Defining the port for the server (usually between 5000 and 6000)
 // Using the port value specified in the .env file

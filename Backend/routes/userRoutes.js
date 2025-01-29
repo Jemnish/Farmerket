@@ -1,12 +1,11 @@
 const router = require("express").Router();
 const userController = require("../controllers/userControllers");
-const { loginRateLimiter } = require("../middleware/rateLimiter");
 
 // Creating user registration route
 router.post("/create", userController.createUser);
 
 // Creating user login route
-router.post("/login", loginRateLimiter, userController.loginUser);
+router.post("/login", userController.loginUser);
 
 // craeting user update route
 router.put("/update", userController.updateUserDetails);

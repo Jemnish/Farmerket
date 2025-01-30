@@ -7,9 +7,10 @@ import { registerUserApi } from "../../api/Api";
 import registerImg from "../../assets/images/register_cover.jpeg";
 import userIcon from "../../assets/images/user.png";
 import ReCapthca from "react-google-recaptcha";
+import DOMPurify from "dompurify"; // Import DOMPurify
 
 const Register = () => {
-  //make a usestate for 5 fields
+  // State variables
   const [fullname, setFullname] = useState("");
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
@@ -19,7 +20,7 @@ const Register = () => {
   const [confirmpassword, setConfirmPassword] = useState("");
   const [capValue, setCapValue] = useState(null);
 
-  //use state for error message
+  // State for errors
   const [fullnameError, setFullnameError] = useState("");
   const [phoneError, setPhoneError] = useState("");
   const [usernameError, setUsernameError] = useState("");
@@ -28,40 +29,48 @@ const Register = () => {
   const [passwordError, setPasswordError] = useState("");
   const [confirmpasswordError, setConfirmPasswordError] = useState("");
 
-  // make a each function for changing the value
+  // Function to sanitize user input
+  const sanitizeInput = (input) => DOMPurify.sanitize(input);
+
+  // Update state with sanitized input
   const handleFullname = (e) => {
-    setFullname(e.target.value);
+    setFullname(sanitizeInput(e.target.value));
     setFullnameError("");
   };
+
   const handleEmail = (e) => {
-    setEmail(e.target.value);
+    setEmail(sanitizeInput(e.target.value));
     setEmailError("");
   };
 
   const handlePhone = (e) => {
-    setPhone(e.target.value);
+    setPhone(sanitizeInput(e.target.value));
     setPhoneError("");
   };
+
   const handleUserType = (e) => {
-    setUserType(e.target.value);
+    setUserType(sanitizeInput(e.target.value));
     setUserTypeError("");
   };
+
   const handleUsername = (e) => {
-    setUsername(e.target.value);
+    setUsername(sanitizeInput(e.target.value));
     setUsernameError("");
   };
+
   const handlePassword = (e) => {
-    setPassword(e.target.value);
+    setPassword(sanitizeInput(e.target.value));
     setPasswordError("");
   };
+
   const handleConfirmPassword = (e) => {
-    setConfirmPassword(e.target.value);
+    setConfirmPassword(sanitizeInput(e.target.value));
     setConfirmPasswordError("");
   };
 
-  //validation
-  var validate = () => {
-    var isValid = true;
+  // Validation
+  const validate = () => {
+    let isValid = true;
     if (fullname.trim() === "") {
       setFullnameError("Full Name is required");
       isValid = false;
@@ -86,12 +95,10 @@ const Register = () => {
       setPasswordError("Password is required");
       isValid = false;
     }
-
     if (password.length < 6) {
-      setPasswordError("Password must be atleast 6 characters");
+      setPasswordError("Password must be at least 6 characters");
       isValid = false;
     }
-
     if (phone.length < 10) {
       setPhoneError("Invalid Phone Number");
       isValid = false;
@@ -107,55 +114,21 @@ const Register = () => {
     return isValid;
   };
 
-  const validatePassword = (password) => {
-    const minLength = 8; // Minimum password length
-    const maxLength = 20; // Maximum password length
-
-    // Regex pattern to enforce complexity rules (lowercase, uppercase, digit, special character)
-    const passwordRegex =
-      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~])[A-Za-z\d!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~]{8,20}$/;
-
-    if (password.length < minLength || password.length > maxLength) {
-      toast.error(
-        `Password must be between ${minLength} and ${maxLength} characters long.`
-      );
-      return false;
-    }
-
-    if (!passwordRegex.test(password)) {
-      toast.error(
-        "Password must contain at least one uppercase letter, one lowercase letter, one digit, and one special character."
-      );
-      return false;
-    }
-    return true;
-  };
-  //submit button function
+  // Submit function
   const handleSubmit = (e) => {
     e.preventDefault();
-    //validate
-    var isValidated = validate();
-    if (!isValidated) {
-      return;
-    }
+    if (!validate()) return;
 
-    //validate password
-    if (!validatePassword(password)) {
-      return;
-    }
-
-    // Making JSON object
     const data = {
-      fullname: fullname,
-      phone: phone,
-      email: email,
-      usertype: usertype,
-      username: username,
-      password: password,
+      fullname,
+      phone,
+      email,
+      usertype,
+      username,
+      password,
     };
 
     registerUserApi(data).then((res) => {
-      // Received data : sucess mesaage
       if (res.data.success === false) {
         toast.error(res.data.message);
       } else {
@@ -179,7 +152,7 @@ const Register = () => {
                 <div className="user">
                   <img src={userIcon} alt="" />
                 </div>
-                <h2>register</h2>
+                <h2>Register</h2>
 
                 <Form>
                   <FormGroup>
@@ -255,14 +228,14 @@ const Register = () => {
                     )}
                   </FormGroup>
                   <ReCapthca
-                    sitekey="6LeaDMQqAAAAADPApk-XzX4KUUeZRv8lAchrlY38"
+                    sitekey="YOUR_SITE_KEY"
                     onChange={(val) => setCapValue(val)}
                     className="mb-3"
                   />
 
                   <Button
                     disabled={!capValue}
-                    className="btn secondary__btn auth__btn "
+                    className="btn secondary__btn auth__btn"
                     type="submit"
                     onClick={handleSubmit}
                   >

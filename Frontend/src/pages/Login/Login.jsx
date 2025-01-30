@@ -28,7 +28,11 @@ const Login = () => {
   const [otpError, setOtpError] = useState("");
 
   // Function to sanitize user input before setting state
-  const sanitizeInput = (input) => DOMPurify.sanitize(input);
+  const sanitizeInput = (input) => {
+    const sanitized = DOMPurify.sanitize(input);
+    console.log("Sanitized input:", sanitized); // Log sanitized input to check
+    return sanitized;
+  };
 
   // Validation function
   const validateFields = () => {
@@ -95,7 +99,10 @@ const Login = () => {
     }
 
     try {
-      const res = await verifyEmailOtpApi({ username: sanitizeInput(username), otp: sanitizeInput(otp) });
+      const res = await verifyEmailOtpApi({
+        username: sanitizeInput(username),
+        otp: sanitizeInput(otp),
+      });
       if (res.data.success) {
         toast.success("Login successful!");
         localStorage.setItem("token", res.data.token);

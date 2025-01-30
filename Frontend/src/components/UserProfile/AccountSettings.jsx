@@ -2,9 +2,9 @@ import React, { useState, useEffect } from "react";
 import "./AccountSettings.css";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify";
-
 import { FormGroup } from "react-bootstrap";
 import { updateUserApi, userDetailsApi, deleteUserApi } from "../../api/Api";
+import DOMPurify from "dompurify"; // Import DOMPurify for XSS protection
 
 const AccountSettings = () => {
   const [currentUser, setCurrentUser] = useState({});
@@ -29,7 +29,6 @@ const AccountSettings = () => {
   };
 
   useEffect(() => {
-    console.log(data);
     userDetailsApi(data)
       .then((res) => {
         if (res.data.success === false) {
@@ -43,32 +42,34 @@ const AccountSettings = () => {
       });
   }, []);
 
-  console.log(currentUser);
+  // Function to sanitize input
+  const sanitizeInput = (input) => {
+    return DOMPurify.sanitize(input);
+  };
 
-  //make a usestate for 5 fields
+  // State for form fields
   const [fullname, setFullname] = useState("");
   const [phone, setPhone] = useState("");
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
 
   const handleFullname = (e) => {
-    setFullname(e.target.value);
+    setFullname(sanitizeInput(e.target.value)); // Sanitize input before setting state
   };
   const handlePhone = (e) => {
-    setPhone(e.target.value);
+    setPhone(sanitizeInput(e.target.value)); // Sanitize input before setting state
   };
   const handleUsername = (e) => {
-    setUsername(e.target.value);
+    setUsername(sanitizeInput(e.target.value)); // Sanitize input before setting state
   };
   const handlePassword = (e) => {
-    setPassword(e.target.value);
+    setPassword(sanitizeInput(e.target.value)); // Sanitize input before setting state
   };
 
   const validatePassword = (password) => {
-    const minLength = 8; // Minimum password length
-    const maxLength = 20; // Maximum password length
+    const minLength = 8;
+    const maxLength = 20;
 
-    // Regex pattern to enforce complexity rules (lowercase, uppercase, digit, special character)
     const passwordRegex =
       /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~])[A-Za-z\d!@#$%^&*()_+{}\[\]:;"'<>,.?\/\\|`~]{8,20}$/;
 
@@ -88,9 +89,8 @@ const AccountSettings = () => {
     return true;
   };
 
-  //validation
-  var validate = () => {
-    var isValid = true;
+  const validate = () => {
+    let isValid = true;
     if (fullname.trim() === "") {
       isValid = false;
     }
@@ -100,27 +100,22 @@ const AccountSettings = () => {
     if (password.trim() === "") {
       isValid = false;
     }
-
     return isValid;
   };
 
-  //submit button function
   const handleSubmit = (e) => {
     e.preventDefault();
-    //validate
-    var isValidated = validate();
+    const isValidated = validate();
 
     if (!isValidated) {
       toast.error("Please fill all the fields");
       return;
     }
-    // Sending request to the api
 
     if (!validatePassword(password)) {
       return;
     }
 
-    // Making JSON object
     const data = {
       userId: userId._id,
       fullname: fullname,
@@ -138,25 +133,19 @@ const AccountSettings = () => {
         }
       })
       .catch((error) => {
-        // Handle network errors or server-side errors
         if (error.response) {
-          // The server responded with a status code outside 2xx
           toast.error(error.response.data.message || "An error occurred");
         } else if (error.request) {
-          // The request was made but no response was received
           toast.error("Network error, please try again.");
         } else {
-          // Something went wrong while setting up the request
           toast.error("An error occurred: " + error.message);
         }
       });
   };
+
   return (
     <div className="account__settings">
       <h1>Update Information</h1>
-
-      {userDetailsApi}
-
       <div className="update__profile-form">
         <div className="row__group">
           <FormGroup className="d-flex flex-row">
@@ -182,7 +171,6 @@ const AccountSettings = () => {
 
           <FormGroup className="d-flex flex-row">
             <label htmlFor="">Username :</label>
-
             <input
               onChange={handleUsername}
               type="text"
@@ -192,10 +180,9 @@ const AccountSettings = () => {
           </FormGroup>
           <FormGroup className="d-flex flex-row">
             <label htmlFor="">Password :</label>
-
             <input
               onChange={handlePassword}
-              type="text"
+              type="password"
               className="form-control"
               placeholder="********"
             />
@@ -212,7 +199,7 @@ const AccountSettings = () => {
 
           <Button
             onClick={handleDelete}
-            className="btn delete__btn w-100 mt-3 "
+            className="btn delete__btn w-100 mt-3"
           >
             Delete
           </Button>

@@ -1,11 +1,11 @@
 import React, { useState } from "react";
-
+import DOMPurify from "dompurify";
 import "./Buying.css";
 import { Button } from "reactstrap";
 import { toast } from "react-toastify";
 import { FormGroup, ListGroup, ListGroupItem } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { addReview, addtoCart } from "../../api/Api";
+import { addtoCart } from "../../api/Api";
 
 const Buying = ({ product }) => {
   const [buyingName, setBuyingName] = useState("");
@@ -13,22 +13,20 @@ const Buying = ({ product }) => {
   const [buyingAddress, setBuyingAddress] = useState("");
 
   const handleBuyingName = (e) => {
-    setBuyingName(e.target.value);
+    setBuyingName(DOMPurify.sanitize(e.target.value));
   };
   const handleBuyingPhone = (e) => {
-    setBuyingPhone(e.target.value);
+    setBuyingPhone(DOMPurify.sanitize(e.target.value));
   };
   const handleBuyingAddress = (e) => {
-    setBuyingAddress(e.target.value);
+    setBuyingAddress(DOMPurify.sanitize(e.target.value));
   };
-
 
   const data = JSON.parse(localStorage.getItem("userData"));
   const userId = data._id;
   const serviceFee = 100;
   const totalAmount = serviceFee + parseInt(product.productPrice);
   const { id } = useParams();
-
 
   const handleSubmit = () => {
     if (buyingName === "" || buyingPhone === "" || buyingAddress === "") {
@@ -44,13 +42,12 @@ const Buying = ({ product }) => {
     addtoCart(buyingData).then((res) => {
       if (res.data.success === true) {
         toast.success("Product added to cart");
-      }else{
+      } else {
         toast.error(res.data.message);
       }
-    }
-    );
-
+    });
   };
+
   return (
     <div className="buying">
       <div className="buying__top d-flex align-items-center justify-content-between">
@@ -58,7 +55,6 @@ const Buying = ({ product }) => {
           Rs.{product.productPrice} <span>/per item</span>
         </h3>
       </div>
-      {/* ===================== Buying form  end ====================== */}
       <div className="buying__form">
         <h5>Information</h5>
         <div className="buying__info-form">
@@ -88,15 +84,12 @@ const Buying = ({ product }) => {
           </FormGroup>
         </div>
       </div>
-      {/* ===================== Buying form start ====================== */}
-
-      {/* ===================== Buying bottom start ====================== */}
       <div className="buying__bottom mt-2">
         <ListGroup>
           <ListGroupItem className="border-0 px-0 d-flex align-items-center justify-content-between">
             <h5 className="d-flex align-items-center gap-1">
               Rs.{product.productPrice}
-              <i class="ri-close-line"></i>
+              <i className="ri-close-line"></i>
               per item
             </h5>
             <span>Rs.{product.productPrice}</span>
@@ -114,8 +107,6 @@ const Buying = ({ product }) => {
           Add to Cart
         </Button>
       </div>
-
-      {/* ===================== Buying bottom start ====================== */}
     </div>
   );
 };

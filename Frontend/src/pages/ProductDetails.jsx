@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../styles/ProductDetails.css";
 import { useParams } from "react-router-dom";
 import { getSingleProduct } from "../api/Api";
+import DOMPurify from "dompurify";
 import avatar from "../assets/images/avatar.jpg";
 import { Col, Row, Container, Form, ListGroup } from "react-bootstrap";
 import Newsletter from "../shared/Newsletter";
@@ -82,12 +83,13 @@ const ProductDetails = () => {
       toast.error("Please enter all the fields");
       return;
     }
+    const sanitizedComment = DOMPurify.sanitize(comment);
 
     const data = {
       productId,
       userId,
       reviewId,
-      comment,
+      sanitizedComment,
       rating,
       username,
     };
@@ -140,7 +142,9 @@ const ProductDetails = () => {
                   </div>
                   <h6 className="product__h6">Description</h6>
                   <div className="tour__extra-details">
-                    <span>{product.productDescription}</span>
+                    <span>
+                      {DOMPurify.sanitize(product.productDescription)}
+                    </span>
                   </div>
                 </div>
 
@@ -204,7 +208,7 @@ const ProductDetails = () => {
                               </span>
                             </div>
 
-                            <h6>{review.comment}</h6>
+                            <h6>{DOMPurify.sanitize(review.comment)}</h6>
                           </div>
                         </div>
                       ))}

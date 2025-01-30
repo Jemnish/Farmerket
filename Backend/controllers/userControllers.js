@@ -4,6 +4,14 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const productModel = require("../models/productModel");
 const sentOtp = require("../services/sendOTP");
+const sanitizeHtml = require("sanitize-html");
+
+const sanitizeInput = (input) => {
+  return sanitizeHtml(input, {
+    allowedTags: [], // Remove all HTML tags
+    allowedAttributes: {}, // Remove all attributes
+  });
+};
 
 // Function to create a new user
 const createUser = async (req, res) => {
@@ -14,32 +22,33 @@ const createUser = async (req, res) => {
   const { fullname, phone, usertype, username, password, email } = req.body;
 
   // 3. Validate the extracted data (ensure no field is empty)
-  if (!phone || !fullname || !username || !password || !usertype || !email) { 
+  if (!phone || !fullname || !username || !password || !usertype || !email) {
     return res.status(400).json({
       success: false,
       message: "Please enter all the fields!!",
     });
   }
 
+  const cleanPhone = sanitizeInput(phone);
+  const cleanFullname = sanitizeInput(fullname);
+  const cleanUsername = sanitizeInput(username);
+  const cleanEmail = sanitizeInput(email);
+
   // 3.1. Determine if the user is an admin based on the usertype
   let isAdmin = usertype === "Seller";
 
   try {
     // 4. Check if a user with the same username already exists
-    const existingUser = await userModel.findOne({ username: username });
+    const existingUser = await userModel.findOne({ username: cleanUsername });
     if (existingUser) {
       return res.json({
         success: false,
         message: "Username already in use!!!",
       });
-      // return res.status(400).json({
-      //   success: false,
-      //   message: "Username already in use!!!",
-      // });
     }
 
     // 4.1. Check if a user with the same phone number already exists
-    const existingPhone = await userModel.findOne({ phone: phone });
+    const existingPhone = await userModel.findOne({ phone: cleanPhone });
     if (existingPhone) {
       // return res.status(400).json({
       //   success: false,
@@ -58,11 +67,11 @@ const createUser = async (req, res) => {
 
     // 6. Create a new user with the provided data
     const newUser = new userModel({
-      fullname: fullname,
-      phone: phone,
-      username: username,
+      fullname: cleanFullname,
+      phone: cleanPhone,
+      username: cleanUsername,
       password: hashedPassword,
-      email: email,
+      email: cleanEmail,
       isAdmin: isAdmin,
     });
 

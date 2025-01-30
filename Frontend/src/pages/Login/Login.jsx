@@ -1,26 +1,33 @@
 import React, { useState } from "react";
 import { toast } from "react-toastify";
-import ReCapthca from "react-google-recaptcha";
+import ReCaptcha from "react-google-recaptcha";
 import { Container, Row, Col, Form, FormGroup, Button } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
 import "../../styles/Login.css";
-import { loginUserApi } from "../../api/Api";
+import { generateOtpApi, loginUserApi, verifyEmailOtpApi } from "../../api/Api"; // Import API functions
 import loginImg from "../../assets/images/login_cover.jpg";
 import userIcon from "../../assets/images/user.png";
 
 const Login = () => {
   const navigate = useNavigate();
-  // Making a use sate
+
+  // State for login credentials
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+
+  // State for OTP verification
+  const [showOtpField, setShowOtpField] = useState(false); // Show OTP field dynamically
+  const [otp, setOtp] = useState("");
+  const [otpSent, setOtpSent] = useState(false);
   const [capValue, setCapValue] = useState(null);
 
-  // Making an error state
+  // Error states
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+  const [otpError, setOtpError] = useState("");
 
-  // validation
-  const validation = () => {
+  // Validation function
+  const validateFields = () => {
     let isValid = true;
     if (username.trim() === "") {
       setUsernameError("Username is required");
@@ -33,47 +40,67 @@ const Login = () => {
     return isValid;
   };
 
-  const handleSubmit = async (e) => {
+  // Handle login submission
+  const handleLoginSubmit = async (e) => {
     e.preventDefault();
 
-    const isValidated = validation();
-    if (!isValidated) {
-      return;
-    }
+    if (!validateFields()) return;
 
-    const data = {
-      username: username,
-      password: password,
-    };
+    const data = { username, password };
 
     try {
       const res = await loginUserApi(data);
-      console.log(res.data.message);
-
-      if (res.data.success === false) {
+      if (!res.data.success) {
         toast.error(res.data.message);
       } else {
-        console.log("ok");
-
-        toast.success(res.data.message);
-
-        localStorage.setItem("token", res.data.token);
-
-        const convertedData = JSON.stringify(res.data.userData);
-        localStorage.setItem("userData", convertedData);
-
-        const user = JSON.parse(localStorage.getItem("userData"));
-        console.log(user.isAdmin);
-
-        if (user.isAdmin) {
-          navigate("/admin/dashboard");
-        } else {
-          navigate("/");
-        }
+        toast.success("Credentials Verified! Sending OTP...");
+        await sendOtpRequest(); // Send OTP after credentials are verified
       }
     } catch (error) {
-      console.error("Login failed", error);
-      toast.error("An error occurred. Please try again.");
+      toast.error("Login failed. Please try again.");
+    }
+  };
+
+  // Send OTP request
+  const sendOtpRequest = async () => {
+    try {
+      const res = await generateOtpApi({ username });
+      if (res.data.success) {
+        setShowOtpField(true);
+        setOtpSent(true);
+        toast.success("OTP sent to your email.");
+      } else {
+        toast.error(res.data.message);
+      }
+    } catch (error) {
+      toast.error("Failed to send OTP.");
+    }
+  };
+
+  // Verify OTP
+  const handleOtpSubmit = async (e) => {
+    e.preventDefault();
+
+    if (!otp) {
+      setOtpError("Please enter the OTP.");
+      return;
+    }
+
+    try {
+      const res = await verifyEmailOtpApi({ username, otp });
+      if (res.data.success) {
+        toast.success("Login successful!");
+        localStorage.setItem("token", res.data.token);
+        localStorage.setItem("userData", JSON.stringify(res.data.userData));
+
+        const user = res.data.userData;
+        navigate(user.isAdmin ? "/admin/dashboard" : "/");
+      } else {
+        setOtpError("Invalid OTP. Please try again.");
+        toast.error("Invalid OTP.");
+      }
+    } catch (error) {
+      toast.error("OTP verification failed.");
     }
   };
 
@@ -84,59 +111,92 @@ const Login = () => {
           <Col lg="8" className="m-auto">
             <div className="login__container d-flex justify-content-between">
               <div className="login__img">
-                <img src={loginImg} alt="" />
+                <img src={loginImg} alt="Login" />
               </div>
 
               <div className="login__form">
                 <div className="user">
-                  <img src={userIcon} alt="" />
+                  <img src={userIcon} alt="User" />
                 </div>
                 <h2>Login</h2>
 
                 <Form>
+                  {/* Username Field */}
                   <FormGroup>
                     <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Username"
+                      value={username}
                       onChange={(e) => {
                         setUsername(e.target.value);
                         setUsernameError("");
                       }}
-                      type="text"
-                      className="form-control"
-                      placeholder="Username"
                     />
                     {usernameError && (
-                      <p className="text__danger">{usernameError}</p>
+                      <p className="text-danger">{usernameError}</p>
                     )}
                   </FormGroup>
+
+                  {/* Password Field */}
                   <FormGroup>
                     <input
+                      type="password"
+                      className="form-control"
+                      placeholder="Password"
+                      value={password}
                       onChange={(e) => {
                         setPassword(e.target.value);
                         setPasswordError("");
                       }}
-                      type="text"
-                      className="form-control"
-                      placeholder="Password"
                     />
                     {passwordError && (
-                      <p className="text__danger">{passwordError}</p>
+                      <p className="text-danger">{passwordError}</p>
                     )}
                   </FormGroup>
-                  <ReCapthca
+
+                  <ReCaptcha
                     sitekey="6LeaDMQqAAAAADPApk-XzX4KUUeZRv8lAchrlY38"
                     onChange={(val) => setCapValue(val)}
                     className="mb-3"
                   />
 
+                  {/* Login Button */}
                   <Button
                     disabled={!capValue}
-                    className="btn secondary__btn auth__btn "
+                    className="btn secondary__btn auth__btn"
                     type="submit"
-                    onClick={handleSubmit}
+                    onClick={handleLoginSubmit}
                   >
                     Login
                   </Button>
                 </Form>
+
+                {/* OTP Verification Field (Appears Only After Login Success) */}
+                {showOtpField && (
+                  <Form onSubmit={handleOtpSubmit}>
+                    <FormGroup>
+                      <input
+                        type="text"
+                        className="form-control"
+                        placeholder="Enter OTP"
+                        value={otp}
+                        onChange={(e) => {
+                          setOtp(e.target.value);
+                          setOtpError("");
+                        }}
+                      />
+                      {otpError && <p className="text-danger">{otpError}</p>}
+                    </FormGroup>
+
+                    <Button
+                      className="btn secondary__btn auth__btn"
+                      type="submit"
+                    >
+                      Verify OTP
+                    </Button>
+                  </Form>
+                )}
 
                 <p>
                   Don't have an account? <Link to="/register">Create</Link>

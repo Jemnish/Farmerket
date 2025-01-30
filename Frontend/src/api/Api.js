@@ -16,6 +16,12 @@ export const registerUserApi = (data) => Api.post("/api/user/create", data);
 
 export const loginUserApi = (data) => Api.post("/api/user/login", data);
 
+export const generateOtpApi = (data) =>
+  Api.post("/api/auth/generate_otp", data);
+
+export const verifyEmailOtpApi = (data) =>
+  Api.post("/api/auth/verify_otp", data);
+
 export const userDetailsApi = (data) =>
   Api.get("/api/user/details", { params: data });
 

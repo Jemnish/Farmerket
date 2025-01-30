@@ -3,9 +3,6 @@ const nodemailer = require("nodemailer");
 const dotenv = require("dotenv");
 dotenv.config();
 
-console.log("Email User:", process.env.EMAIL_USER); // Debugging
-console.log("Email Pass:", process.env.EMAIL_PASS); // Debugging
-
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {

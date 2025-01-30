@@ -7,6 +7,7 @@ const databaseConnection = require("./database/database"); // Custom module for 
 const path = require("path"); // For handling file and directory paths
 const { globalRateLimiter } = require("./middleware/rateLimiter"); // Import rate limiter
 
+
 // Creating an Express application instance
 const app = express();
 

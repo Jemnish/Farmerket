@@ -7,7 +7,6 @@ const databaseConnection = require("./database/database"); // Custom module for 
 const path = require("path"); // For handling file and directory paths
 const { globalRateLimiter } = require("./middleware/rateLimiter"); // Import rate limiter
 
-
 // Creating an Express application instance
 const app = express();
 
@@ -44,11 +43,9 @@ app.use("/api/product", require("./routes/productRoutes")); // Product-related r
 app.use("/api/cart", require("./routes/cartRoutes")); // Cart-related routes
 app.use("/api/auth", require("./routes/authRoutes"));
 
-
 // Defining the port for the server (usually between 5000 and 6000)
 // Using the port value specified in the .env file
 const PORT = process.env.PORT || 5000;
-
 
 // Starting the server and listening on the specified port
 app.listen(PORT, () => {

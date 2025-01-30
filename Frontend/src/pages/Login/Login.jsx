@@ -3,8 +3,9 @@ import { toast } from "react-toastify";
 import ReCaptcha from "react-google-recaptcha";
 import { Container, Row, Col, Form, FormGroup, Button } from "reactstrap";
 import { Link, useNavigate } from "react-router-dom";
+import DOMPurify from "dompurify"; // Import DOMPurify for XSS protection
 import "../../styles/Login.css";
-import { generateOtpApi, loginUserApi, verifyEmailOtpApi } from "../../api/Api"; // Import API functions
+import { generateOtpApi, loginUserApi, verifyEmailOtpApi } from "../../api/Api";
 import loginImg from "../../assets/images/login_cover.jpg";
 import userIcon from "../../assets/images/user.png";
 
@@ -16,7 +17,7 @@ const Login = () => {
   const [password, setPassword] = useState("");
 
   // State for OTP verification
-  const [showOtpField, setShowOtpField] = useState(false); // Show OTP field dynamically
+  const [showOtpField, setShowOtpField] = useState(false);
   const [otp, setOtp] = useState("");
   const [otpSent, setOtpSent] = useState(false);
   const [capValue, setCapValue] = useState(null);
@@ -25,6 +26,9 @@ const Login = () => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [otpError, setOtpError] = useState("");
+
+  // Function to sanitize user input before setting state
+  const sanitizeInput = (input) => DOMPurify.sanitize(input);
 
   // Validation function
   const validateFields = () => {
@@ -46,7 +50,11 @@ const Login = () => {
 
     if (!validateFields()) return;
 
-    const data = { username, password };
+    // Sanitize inputs before sending them to the server
+    const sanitizedUsername = sanitizeInput(username);
+    const sanitizedPassword = sanitizeInput(password);
+
+    const data = { username: sanitizedUsername, password: sanitizedPassword };
 
     try {
       const res = await loginUserApi(data);
@@ -64,7 +72,7 @@ const Login = () => {
   // Send OTP request
   const sendOtpRequest = async () => {
     try {
-      const res = await generateOtpApi({ username });
+      const res = await generateOtpApi({ username: sanitizeInput(username) });
       if (res.data.success) {
         setShowOtpField(true);
         setOtpSent(true);
@@ -87,7 +95,7 @@ const Login = () => {
     }
 
     try {
-      const res = await verifyEmailOtpApi({ username, otp });
+      const res = await verifyEmailOtpApi({ username: sanitizeInput(username), otp: sanitizeInput(otp) });
       if (res.data.success) {
         toast.success("Login successful!");
         localStorage.setItem("token", res.data.token);
@@ -129,7 +137,7 @@ const Login = () => {
                       placeholder="Username"
                       value={username}
                       onChange={(e) => {
-                        setUsername(e.target.value);
+                        setUsername(sanitizeInput(e.target.value));
                         setUsernameError("");
                       }}
                     />
@@ -146,7 +154,7 @@ const Login = () => {
                       placeholder="Password"
                       value={password}
                       onChange={(e) => {
-                        setPassword(e.target.value);
+                        setPassword(sanitizeInput(e.target.value));
                         setPasswordError("");
                       }}
                     />
@@ -182,7 +190,7 @@ const Login = () => {
                         placeholder="Enter OTP"
                         value={otp}
                         onChange={(e) => {
-                          setOtp(e.target.value);
+                          setOtp(sanitizeInput(e.target.value));
                           setOtpError("");
                         }}
                       />

@@ -27,7 +27,7 @@ const About = () => {
                 </h2>
 
                 <p className="section__description">
-                  At Kheti Pati, our dedication to serving farmers goes beyond
+                  At Farmerket, our dedication to serving farmers goes beyond
                   just offering products. We are here to provide comprehensive
                   support, expert advice, and innovative solutions to help you
                   achieve your farming goals. Your success is our priority.

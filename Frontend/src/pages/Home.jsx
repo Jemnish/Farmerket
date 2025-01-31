@@ -27,7 +27,7 @@ const Home = () => {
                   <img src={worldImg} alt="" />
                 </div>
                 <h1>
-                  <span className="highlight">Kheti Pati</span> for the future.
+                  <span className="highlight">Farmerket</ span> for the future.
                 </h1>
                 <p>
                   Explore the marketplace designed for modern farmers. Whether

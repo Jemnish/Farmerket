@@ -47,6 +47,15 @@ const createUser = async (req, res) => {
       });
     }
 
+    // check if a user with the same email already exits
+    const existingEmail = await userModel.findOne({ email: cleanEmail });
+    if (existingEmail) {
+      return res.json({
+        success: false,
+        message: "Email already registered!!!",
+      });
+    }
+
     // 4.1. Check if a user with the same phone number already exists
     const existingPhone = await userModel.findOne({ phone: cleanPhone });
     if (existingPhone) {

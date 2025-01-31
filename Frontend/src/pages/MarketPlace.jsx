@@ -61,7 +61,7 @@ const MarketPlace = () => {
                     <Card key={singleProduct._id}>
                       <div className="product__img">
                         <img
-                          src={`http://localhost:5000/products/${singleProduct.productImage}`}
+                          src={`${singleProduct.productImage}`}
                           alt="Product"
                           className="product-img"
                         />

@@ -261,10 +261,19 @@ const getAllProducts = async (req, res) => {
 
     console.log(products);
     // Respond with success message and the fetched products
-    res.status(201).json({
+
+    // send products.images as 'https://localhost:5000/products/imagename'
+    const updatedProducts = products.map((product) => {
+      return {
+        ...product._doc,
+        productImage: `https://localhost:5000/products/${product.productImage}`,
+      };
+    });
+
+    res.status(200).json({
       success: true,
       message: "Products fetched successfully",
-      products: products,
+      products: updatedProducts,
     });
   } catch (error) {
     // Handle any errors and respond with an error message

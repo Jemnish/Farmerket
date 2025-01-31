@@ -34,6 +34,16 @@ const createUser = async (req, res) => {
   const cleanUsername = sanitizeInput(username);
   const cleanEmail = sanitizeInput(email);
 
+  // password validation (at least 6 characters) and special character, number, uppercase and lowercase
+  const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+  if (!passwordRegex.test(password)) {
+    return res.status(400).json({
+      success: false,
+      message:
+        "Password must be at least 6 characters with at least one uppercase, one lowercase, one number and one special character",
+    });
+  }
+
   // 3.1. Determine if the user is an admin based on the usertype
   let isAdmin = usertype === "Seller";
 

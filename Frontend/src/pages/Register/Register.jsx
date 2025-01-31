@@ -119,6 +119,16 @@ const Register = () => {
     e.preventDefault();
     if (!validate()) return;
 
+    // password is minimun 6 letters with at least one uppercase, one lowercase, one number and one special character
+    const passwordRegex = /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[\W_]).{6,}$/;
+    if (!passwordRegex.test(password)) {
+      setPasswordError(
+        "Password must be at least 6 characters with at least one uppercase, one lowercase, one number and one special character"
+      );
+      return;
+    }
+    
+
     const data = {
       fullname,
       phone,

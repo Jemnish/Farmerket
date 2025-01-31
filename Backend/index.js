@@ -1,6 +1,8 @@
 // Importing necessary packages
 const express = require("express"); // Web framework for Node.js
 const dotenv = require("dotenv"); // For managing environment variables
+const fs = require("fs");
+const https = require("https");
 const cors = require("cors"); // For enabling Cross-Origin Resource Sharing
 const acceptFormData = require("express-fileupload"); // For handling file uploads
 const databaseConnection = require("./database/database"); // Custom module for database connection
@@ -9,8 +11,6 @@ const { globalRateLimiter } = require("./middleware/rateLimiter"); // Import rat
 
 // Creating an Express application instance
 const app = express();
-
-
 
 // Configuring CORS (Cross-Origin Resource Sharing) policy
 const corsOptions = {
@@ -49,9 +49,14 @@ app.use("/api/auth", require("./routes/authRoutes"));
 // Using the port value specified in the .env file
 const PORT = process.env.PORT || 5000;
 
+const options = {
+  key: fs.readFileSync("./key.pem"),
+  cert: fs.readFileSync("./cert.pem"),
+};
+
 // Starting the server and listening on the specified port
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}!!!`); // Log message when server starts
+https.createServer(options, app).listen(PORT, () => {
+  console.log(`Server is running on port ${PORT}!!!`);
 });
 
 module.exports = app;

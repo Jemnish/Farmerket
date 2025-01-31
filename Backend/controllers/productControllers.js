@@ -258,14 +258,13 @@ const getAllProducts = async (req, res) => {
   try {
     // Find all products in the database
     const products = await productModel.find({});
-    
+
     console.log(products);
     // Respond with success message and the fetched products
     res.status(201).json({
       success: true,
       message: "Products fetched successfully",
       products: products,
-      
     });
   } catch (error) {
     // Handle any errors and respond with an error message

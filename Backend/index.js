@@ -10,6 +10,8 @@ const { globalRateLimiter } = require("./middleware/rateLimiter"); // Import rat
 // Creating an Express application instance
 const app = express();
 
+
+
 // Configuring CORS (Cross-Origin Resource Sharing) policy
 const corsOptions = {
   origin: true, // Allow all origins

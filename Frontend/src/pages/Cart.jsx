@@ -67,8 +67,8 @@ const Cart = () => {
       amount: parseInt(orderD.productCost, 10) * 100,
       purchase_order_id: orderD.orderId + "123ads",
       purchase_order_name: "test_user123",
-      return_url: "http://localhost:3000/thankyou",
-      website_url: "http://localhost:3000/nothankyou",
+      return_url: "https://localhost:3000/thankyou",
+      website_url: "https://localhost:3000/nothankyou",
     };
 
     try {

@@ -48,16 +48,16 @@ export const Footer = () => {
                 <div>
                   <span>
                     <Link to="#">
-                      <i class="ri-youtube-line"></i>
+                      <i className="ri-youtube-line"></i>
                     </Link>
                     <Link to="#">
-                      <i class="ri-github-fill"></i>
+                      <i className="ri-github-fill"></i>
                     </Link>
                     <Link to="#">
-                      <i class="ri-faceboook-circle-line"></i>
+                      <i className="ri-faceboook-circle-line"></i>
                     </Link>
                     <Link to="#">
-                      <i class="ri-instagram-line"></i>
+                      <i className="ri-instagram-line"></i>
                     </Link>
                   </span>
                 </div>

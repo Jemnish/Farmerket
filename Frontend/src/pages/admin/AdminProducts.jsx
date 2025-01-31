@@ -41,8 +41,15 @@ function MyProduct() {
   // image upload handler
   const handleImage = (event) => {
     const file = event.target.files[0];
-    setProductImage(file); // for backend
-    setPreviewImage(URL.createObjectURL(file));
+    if (file) {
+      const allowedTypes = ["image/png", "image/jpeg", "image/jpg"];
+      if (!allowedTypes.includes(file.type)) {
+        alert("Invalid file type! Please upload a PNG or JPEG image.");
+        return;
+      }
+      setProductImage(file); // for backend
+      setPreviewImage(URL.createObjectURL(file));
+    }
   };
 
   // handle submit
@@ -178,7 +185,9 @@ function MyProduct() {
                             className="form-control"
                           >
                             <option value="plants">Rental</option>
-                            <option value="electronics">Fruits & Veggies</option>
+                            <option value="electronics">
+                              Fruits & Veggies
+                            </option>
                             <option value="gadgets">Milk Product</option>
                             <option value="furniture">Crops</option>
                             <option value="furniture">Tractor</option>
@@ -206,6 +215,7 @@ function MyProduct() {
                           <input
                             onChange={handleImage}
                             type="file"
+                            accept="image/png, image/jpeg, image/jpg"
                             className="form-control"
                           />
                         </div>

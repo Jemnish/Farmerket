@@ -18,7 +18,7 @@ const AboutSection = ({ aboutClass }) => {
           <Col lg="6" md="6">
             <div className="about__section-content">
               <h4 className="section__subtitle">About Us</h4>
-              <h2 className="section__title">Welcome to Kheti Pati</h2>
+              <h2 className="section__title">Welcome to Farmaket</h2>
               <p className="section__description">
                 At Kheti Pati, we are dedicated to revolutionizing agriculture
                 with innovative solutions and quality products. Our mission is

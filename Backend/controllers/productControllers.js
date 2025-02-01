@@ -36,6 +36,18 @@ const createProduct = async (req, res) => {
   // Get the uploaded image
   const { productImage } = req.files;
 
+  // file type validation only png and jpg
+  const validExtensions = [".jpg", ".jpeg", ".png"];
+  const extension = productImage.name.split(".").pop().toLowerCase();
+
+  if (!validExtensions.includes(`.${extension}`)) {
+    return res
+      .status(400)
+      .send("Invalid file type. Only JPG, JPEG, and PNG are allowed.");
+  }
+
+  
+
   // Generate a unique name for the image based on the current timestamp
   const imageName = `${Date.now()}-${productImage.name}`;
 
@@ -333,14 +345,11 @@ const paginationProducts = async (req, res) => {
       .skip(startIndex) // Skip the appropriate number of documents
       .limit(limit) // Limit the results to the specified number
       .exec(); // Execute the query
-    
-    
 
     // Calculate the remaining number of products
     const remainingProducts = totalProducts - (startIndex + products.length);
     const pages = Math.ceil(totalProducts / limit);
 
-  
     // send products.images as 'https://localhost:5000/products/imagename'
     const updatedProducts = products.map((product) => {
       return {

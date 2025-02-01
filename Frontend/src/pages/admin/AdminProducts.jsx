@@ -268,7 +268,7 @@ function MyProduct() {
                           <img
                             width="60"
                             height="60"
-                            src={`http://localhost:5000/products/${singleProduct.productImage}`}
+                            src={`${singleProduct.productImage}`}
                             alt={singleProduct.productTitle}
                             className="img-thumbnail"
                           />

@@ -150,7 +150,7 @@ const AdminUpdateProduct = () => {
             <div className="image section">
               <h6>Previewing old image</h6>
               <img
-                src={`http://localhost:5000/products/${oldImage}`}
+                src={`${oldImage}`}
                 alt="product"
                 height={"90px"}
                 width={"200px"}

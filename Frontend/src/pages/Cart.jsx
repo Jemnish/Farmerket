@@ -97,7 +97,6 @@ const Cart = () => {
       paidStatus = true;
     }
 
-
     const orderData = {
       userId,
       productCost: total,
@@ -159,7 +158,7 @@ const Cart = () => {
           <table className="cart-table">
             <thead>
               <tr className="w100">
-                <th>Image</th>
+                {/* <th>Image</th> */}
                 <th>Name</th>
                 <th>Price</th>
                 <th>Quantity</th>
@@ -170,13 +169,13 @@ const Cart = () => {
             <tbody>
               {cart.map((item) => (
                 <tr key={item.productId} className="cart__items">
-                  <td>
+                  {/* <td>
                     <img
-                      src={`http://localhost:5000/products/${item.productImage}`}
+                      src={`${item.productImage}`}
                       alt={item.productTitle}
                       className="cart-image"
                     />
-                  </td>
+                  </td> */}
                   <td>{item.productTitle}</td>
                   <td>Rs.{Number(item.productPrice).toFixed(2)}</td>
                   <td>

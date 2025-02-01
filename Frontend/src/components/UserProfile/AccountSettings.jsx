@@ -9,9 +9,11 @@ import DOMPurify from "dompurify"; // Import DOMPurify for XSS protection
 const AccountSettings = () => {
   const [currentUser, setCurrentUser] = useState({});
   const userId = JSON.parse(localStorage.getItem("userData"));
+  const csrfToken = JSON.parse(localStorage.getItem("csrfToken"));
 
   const data = {
     userId: userId._id,
+    csrfToken: csrfToken
   };
 
   const handleDelete = () => {

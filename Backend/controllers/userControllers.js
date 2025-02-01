@@ -342,12 +342,21 @@ const getUserDetails = async (req, res) => {
 // Function to delete a user by ID
 const userDelete = async (req, res) => {
   const { userId } = req.query;
+  const csrfTOken = req.data.csrfTOken;
 
   // Validate the request (ensure userId is provided)
   if (!userId) {
     return res.json({
       success: false,
       message: "User ID is required!",
+    });
+  }
+
+  // session validation
+  if (!csrfTOken) {
+    return res.json({
+      success: false,
+      message: "Session ID is required!",
     });
   }
 
@@ -360,9 +369,6 @@ const userDelete = async (req, res) => {
         message: "User does not exist!",
       });
     }
-
-    // Delete the user from the database
-    await userModel.findByIdAndDelete(userId);
 
     // Send a success response back to the client
     res.json({

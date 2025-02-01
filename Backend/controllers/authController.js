@@ -50,7 +50,9 @@ const verifyOTP = async (req, res) => {
     const user = await userModel.findOne({ username });
     if (!user) {
       console.log("❌ User not found!");
-      return res.status(400).json({ success: false, message: "User not found." });
+      return res
+        .status(400)
+        .json({ success: false, message: "User not found." });
     }
 
     console.log(`🔹 Stored OTP in DB: ${user.emailOTP}`);
@@ -64,17 +66,20 @@ const verifyOTP = async (req, res) => {
       await user.save();
 
       // Generate JWT token
-      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET, {
-        expiresIn: "1h",
+      const token = jwt.sign({ email: user.email }, process.env.JWT_SECRET);
+
+      res.cookie("token", token, {
+        httpOnly: true, // Prevents JavaScript from accessing the cookie
+        secure: true,
+        maxAge: 3600000, // Token expires in 1 hour
       });
-      const userToken = await jwt.sign({ id: user._id }, process.env.JWT_SECRET);
+
       res.status(200).json({
         success: true,
         message: "OTP verified successfully!",
-        token: userToken,
+        token: token,
         userData: user,
       });
-      
     } else {
       console.log("❌ Invalid OTP!");
       return res.status(400).json({ success: false, message: "Invalid OTP." });

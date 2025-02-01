@@ -27,6 +27,8 @@ const Login = () => {
   const [passwordError, setPasswordError] = useState("");
   const [otpError, setOtpError] = useState("");
 
+  let csrfToken;
+
   // Function to sanitize user input before setting state
   const sanitizeInput = (input) => {
     const sanitized = DOMPurify.sanitize(input);
@@ -104,11 +106,8 @@ const Login = () => {
       });
       if (res.data.success) {
         toast.success("Login successful!");
-        localStorage.setItem("token", res.data.token);
         localStorage.setItem("userData", JSON.stringify(res.data.userData));
-
-        const user = res.data.userData;
-        navigate(user.isAdmin ? "/admin/dashboard" : "/");
+        navigate(res.data.userData.isAdmin ? "/admin/dashboard" : "/");
       } else {
         setOtpError("Invalid OTP. Please try again.");
         toast.error("Invalid OTP.");

@@ -14,7 +14,7 @@ const app = express();
 
 // Configuring CORS (Cross-Origin Resource Sharing) policy
 const corsOptions = {
-  origin: true, // Allow all origins
+  origin: 'https://localhost:3000', // Allow requests from the specified origin
   credentials: true, // Allow credentials (like cookies) to be sent
   optionSuccessStatus: 200, // Success status code for preflight requests
 };

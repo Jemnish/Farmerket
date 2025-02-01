@@ -237,11 +237,17 @@ const getSingleProduct = async (req, res) => {
       });
     }
 
+    // send products.images as 'https://localhost:5000/products/imagename'
+    const updatedProduct = {
+      ...product._doc,
+      productImage: `https://localhost:5000/products/${product.productImage}`,
+    };
+
     // Respond with success message and the fetched product
     res.status(201).json({
       success: true,
       message: "Product fetched successfully",
-      product: product,
+      product: updatedProduct,
     });
   } catch (error) {
     // Handle any errors and respond with an error message
@@ -327,16 +333,27 @@ const paginationProducts = async (req, res) => {
       .skip(startIndex) // Skip the appropriate number of documents
       .limit(limit) // Limit the results to the specified number
       .exec(); // Execute the query
+    
+    
 
     // Calculate the remaining number of products
     const remainingProducts = totalProducts - (startIndex + products.length);
     const pages = Math.ceil(totalProducts / limit);
 
+  
+    // send products.images as 'https://localhost:5000/products/imagename'
+    const updatedProducts = products.map((product) => {
+      return {
+        ...product._doc,
+        productImage: `https://localhost:5000/products/${product.productImage}`,
+      };
+    });
+
     // Respond with success message, fetched products, and total pages
     res.status(200).json({
       success: true,
       message: "Products fetched successfully",
-      products: products,
+      products: updatedProducts,
       pages: pages,
     });
   } catch (error) {

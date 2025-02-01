@@ -25,7 +25,7 @@ const ProductCard = ({ page }) => {
         <Card key={singleProduct._id}>
           <div className="product__img">
             <img
-              src={`http://localhost:5000/products/${singleProduct.productImage}`}
+              src={`${singleProduct.productImage}`}
               alt="Product"
               className="product-img"
             />
@@ -55,7 +55,10 @@ const ProductCard = ({ page }) => {
             <div className="card__bottom d-flex align-items-center justify-content-between mt-3">
               <h5>
                 Rs.{singleProduct.productPrice}{" "}
-                <span> /per {singleProduct.productType === "food" ? "unit" : "day"}</span>
+                <span>
+                  {" "}
+                  /per {singleProduct.productType === "food" ? "unit" : "day"}
+                </span>
               </h5>
               <button className="btn buying__btn">
                 <Link to={`/products/${singleProduct._id}`}>View Details</Link>

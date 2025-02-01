@@ -118,7 +118,7 @@ const ProductDetails = () => {
           <Row>
             <Col lg="8">
               <div className="product__content">
-                <img src={`/products/${product.productImage}`} alt="" />
+                <img src={`${product.productImage}`} alt="" />
                 <div className="product__info">
                   <h1>{product.productTitle}</h1>
                   <div className="d-flex align-items-center gap-5">

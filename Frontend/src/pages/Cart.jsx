@@ -74,7 +74,6 @@ const Cart = () => {
     try {
       const response = await khaltiPay(paymentData);
       if (response.data.payment_url) {
-        console.log(response.data);
         const okey = response.data;
         navigator.clipboard.writeText(JSON.stringify(okey));
         removeAllCart({ userId });

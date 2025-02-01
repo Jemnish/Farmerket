@@ -15,11 +15,11 @@ const sendOtp = async (phone, otp) => {
   try {
     // Send a POST request to the SMS API with the payload
     const res = await axios.post(url, payload);
-    if (res.status === 200) { // Check if the response status is 200 (OK)
+    if (res.status === 200) {
+      // Check if the response status is 200 (OK)
       isSent = true; // If successful, set isSent to true
     }
   } catch (error) {
-    // Log any errors that occur during the request
     console.log("Error Sending OTP", error.message);
   }
 

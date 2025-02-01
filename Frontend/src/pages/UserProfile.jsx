@@ -23,7 +23,6 @@ const Profile = () => {
             <Col lg="7" className="right__bar">
               {activepage === "accountsettings" && <AccountSettings />}
               {activepage === "yourorders" && <UserOrders />}
-              {console.log(activepage)}
             </Col>
           </Row>
         </Container>

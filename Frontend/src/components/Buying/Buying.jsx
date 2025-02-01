@@ -33,7 +33,6 @@ const Buying = ({ product }) => {
       toast.error("Please fill all the fields");
       return;
     }
-    console.log(id);
 
     const buyingData = {
       userId,

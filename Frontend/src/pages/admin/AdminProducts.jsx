@@ -26,7 +26,6 @@ function MyProduct() {
         console.log(error);
       });
   }, []);
-  console.log(products);
 
   // State for input fields
   const [productTitle, setProductTitle] = useState("");
@@ -65,7 +64,6 @@ function MyProduct() {
     formData.append("productImage", productImage);
     formData.append("userId", userId._id);
 
-    console.log(formData.get("productImage"));
     // make a api call
     createProductApi(formData)
       .then((res) => {

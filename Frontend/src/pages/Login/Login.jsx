@@ -30,7 +30,6 @@ const Login = () => {
   // Function to sanitize user input before setting state
   const sanitizeInput = (input) => {
     const sanitized = DOMPurify.sanitize(input);
-    console.log("Sanitized input:", sanitized); // Log sanitized input to check
     return sanitized;
   };
 

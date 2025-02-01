@@ -42,7 +42,6 @@ const ProductDetails = () => {
   const reviewId = generateTimestampBasedId();
 
   useEffect(() => {
-    console.log(id);
     getSingleProduct(id.toString())
       .then((res) => {
         setProduct(res.data.product);
@@ -95,7 +94,6 @@ const ProductDetails = () => {
     };
 
     addReview(data).then((res) => {
-      console.log(data);
       if (res.data.success == false) {
         toast.error(res.data.message);
       } else {

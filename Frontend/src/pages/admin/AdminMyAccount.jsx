@@ -41,7 +41,6 @@ function MyAccount() {
       });
   }, []);
 
-  console.log(currentUser);
 
   //make a usestate for 5 fields
   const [fullname, setFullname] = useState("");
@@ -87,7 +86,6 @@ function MyAccount() {
     //validate
     var isValidated = validate();
 
-    console.log(fullname, phone, username, password);
     if (!isValidated) {
       toast.error("Please fill all the fields");
       return;
@@ -103,7 +101,6 @@ function MyAccount() {
       password: password,
     };
 
-    console.log(data);
 
     updateUserApi(data).then((res) => {
       // Received data : sucess mesaage

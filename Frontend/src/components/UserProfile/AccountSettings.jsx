@@ -38,7 +38,6 @@ const AccountSettings = () => {
         }
       })
       .catch((error) => {
-        console.log(error);
       });
   }, []);
 

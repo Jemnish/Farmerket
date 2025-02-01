@@ -65,9 +65,6 @@ Farmerket is a secure MERN-based web application designed with robust security m
   - HTTPS enforces encrypted communication
   - MongoDB access restricted with authentication & role-based access control
 
-## **Acknowledgment**
-
-We sincerely thank our module leader for guiding us through the crucial aspects of application security, ethical hacking, Linux, and system security. His teachings have expanded our knowledge beyond development, making us aware of real-world threats and best security practices.
 
 ## **License**
 
